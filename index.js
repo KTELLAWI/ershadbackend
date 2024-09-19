@@ -15,8 +15,9 @@ const port = process.env.PORT || 5050;
 app.use(express.json());
 app.use(
   cors({
-    origin: "*",
+    origin: "https://ershad-front.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
