@@ -131,7 +131,7 @@ const register = async (req, res) => {
     );
 
     res
-      .cookie("jwtErshad", token, { httpOnly: true })
+      .cookie("jwtErshad", token, { httpOnly: true,secure:true,sameSite:"None" })
       .status(201)
       .json({ user: user, message: "User registered successfully" });
   } catch (error) {
@@ -182,7 +182,7 @@ const login = async (req, res) => {
       .cookie("jwtErshad", token, {
         httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
-        sameSite: "Lax",
+        sameSite: "None",
         expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
       })
       .status(200)
@@ -201,7 +201,7 @@ const logout = async (req, res) => {
     res.cookie("jwtErshad", "", {
       httpOnly: process.env.NODE_ENV === "production",
       secure: process.env.NODE_ENV === "production",
-      sameSite: "Lax",
+      sameSite: "None",
       expires: new Date(0),
     });
 
