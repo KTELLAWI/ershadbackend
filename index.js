@@ -14,12 +14,13 @@ const port = process.env.PORT || 5050;
 
 app.use(express.json());
 app.use(
-  cors({
-    origin: "https://ershad-frontend.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  cors()
+  //   {
+  //   origin: "https://ershad-frontend.vercel.app",
+  //   methods: ["GET", "POST", "PUT", "DELETE"],
+  //   credentials: true,
+  //   allowedHeaders: ["Content-Type", "Authorization"],
+  // }
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
