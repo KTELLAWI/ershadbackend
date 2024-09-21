@@ -13,6 +13,9 @@ connectDB();
 const port = process.env.PORT || 5050;
 
 app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   cors()
   //   {
@@ -22,8 +25,6 @@ app.use(
   //   allowedHeaders: ["Content-Type", "Authorization"],
   // }
 );
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use("/api/user", userRoutes);
 app.use("/api/job", jobRoutes);
 app.use("/api/application", applicationRoutes);
