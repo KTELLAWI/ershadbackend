@@ -2,35 +2,34 @@ const mongoose = require("mongoose");
 
 const joinFreelancerSchema = new mongoose.Schema(
   {
+    title: { type: String, enum: ["سيد", "سيدة"], required: true }, 
     fullName: { type: String, required: true },
-    email: { type: String, required: true },
     phoneNumber: { type: String, required: true },
-    idNumber: { type: String, required: true },
+    email: { type: String, required: true },
     city: { type: String, required: true },
-    englishLevel: {
-      type: String,
-      //   enum: ["ضعيف", "متوسط", "ممتاز","جيد","جيد جدا","متوسطة","ضعيفة"],
-      required: true,
-    },
-    title: { type: String, enum: ["سيد", "سيدة"], required: true }, // اللقب
     jobTitle: { type: String, required: true },
     degree: { type: String, required: true },
     graduationYear: { type: String },
-    bio: { type: String },
     willingToRelocate: { type: String },
+    cv: { type: String, required: true },
+    idNumber: { type: String, required: true },
+    englishLevel: {
+      type: String,
+      required: true,
+    },
+    country: { type: String, required: true },
     canWorkRemotely: { type: String },
     maritalStatus: {
       type: String,
       enum: ["اعزب", "متزوج", "مطلق", "ارمله"],
     },
-    cv: { type: String, required: true },
     status: {
       type: String,
       enum: ["تحت المراجعة", "تم الموافقة", "تم رفضه"],
       default: "تحت المراجعة",
     },
+    bio: { type: String },
     profilePicture: { type: String }, 
-    // user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,

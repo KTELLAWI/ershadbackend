@@ -9,6 +9,7 @@ const excelToJson = require("convert-excel-to-json");
 const applyToWork = async (req, res) => {
   try {
     const {
+      country,
       bio,
       fullName,
       email,
@@ -54,6 +55,7 @@ const applyToWork = async (req, res) => {
       englishLevel,
       title,
       bio,
+      country,
       jobTitle,
       degree,
       graduationYear,
@@ -72,7 +74,6 @@ const applyToWork = async (req, res) => {
       applicationForWork,
     });
   } catch (error) {
-    console.error("Error applying for job:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -176,7 +177,6 @@ const getApprovedFreelancers = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error retrieving approved freelancers:", error);
     res.status(500).json({ message: "Error retrieving approved freelancers" });
   }
 };
@@ -285,7 +285,6 @@ const getPendingFreelancers = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error retrieving pending freelancers:", error);
     res.status(500).json({ message: "Error retrieving pending freelancers" });
   }
 };
@@ -312,7 +311,6 @@ const deleteJoinFreelancerRequest = async (req, res) => {
 
     res.status(200).json({ message: "Join request deleted successfully" });
   } catch (error) {
-    console.error("Error deleting join request:", error);
     res.status(500).json({ message: "Error deleting join request" });
   }
 };
@@ -328,7 +326,6 @@ const getSingleJoinRequest = async (req, res) => {
 
     res.status(200).json({ data: joinRequest });
   } catch (error) {
-    console.error("Error retrieving join request:", error);
     res.status(500).json({ message: "Error retrieving join request" });
   }
 };
@@ -362,7 +359,6 @@ const updateWorkStatus = async (req, res) => {
       work,
     });
   } catch (error) {
-    console.error("Error updating job status:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -402,7 +398,6 @@ const updateJoinRequest = async (req, res) => {
       bio: req.body.bio || joinRequest.bio,
       status: req.body.status || joinRequest.status,
     };
-    console.log("Updated Data:", updatedData);
     const updatedRequest = await JoinFreelaner.findByIdAndUpdate(
       requestId,
       updatedData,
@@ -411,13 +406,11 @@ const updateJoinRequest = async (req, res) => {
         runValidators: true,
       }
     );
-    console.log("Request updated successfully:", updatedRequest);
     res.status(200).json({
       message: "Join request updated successfully",
       updatedRequest,
     });
   } catch (error) {
-    console.error("Error updating join request:", error.message);
     res.status(500).json({
       message: "Server error",
     });
@@ -429,42 +422,47 @@ const exportTableToCsv = async (req, res) => {
     const freelancers = await JoinFreelaner.find({ status: "تم الموافقة" });
 
     const headers = [
-      "fullName",
-      "email",
-      "phoneNumber",
-      "idNumber",
-      "city",
-      "englishLevel",
+      "createdAt", 
       "title",
-      "country",
+      "fullName",
+      "phoneNumber",
+      "email",
+      "city",
       "jobTitle",
       "degree",
       "graduationYear",
       "willingToRelocate",
+      "cv",
+      "idNumber",
+      "englishLevel",
+      "country",
       "canWorkRemotely",
       "maritalStatus",
-      "status",
+      "status"
     ];
 
     const rows = freelancers.map((freelancer) => ({
-      fullName: freelancer.fullName,
-      email: freelancer.email,
-      phoneNumber: freelancer.phoneNumber,
-      idNumber: freelancer.idNumber,
-      city: freelancer.city,
-      englishLevel: freelancer.englishLevel,
+      createdAt: freelancer.createdAt ? 
+        freelancer.createdAt.toISOString().split('T')[0] : "", 
       title: freelancer.title,
-      country: freelancer.country,
+      fullName: freelancer.fullName,
+      phoneNumber: freelancer.phoneNumber,
+      email: freelancer.email,
+      city: freelancer.city,
       jobTitle: freelancer.jobTitle,
       degree: freelancer.degree,
       graduationYear: freelancer.graduationYear,
       willingToRelocate: freelancer.willingToRelocate,
+      cv: freelancer.cv ? `${req.protocol}://${req.headers.host}/uploads/cvs/${freelancer.cv}` : "",
+      idNumber: freelancer.idNumber,
+      englishLevel: freelancer.englishLevel,
+      country: freelancer.country,
       canWorkRemotely: freelancer.canWorkRemotely,
       maritalStatus: freelancer.maritalStatus,
-      status: freelancer.status,
+      status: freelancer.status
     }));
 
-    const csv = json2csv(rows, { header: true });
+    const csv = json2csv(rows, { header: true, fields: headers });
 
     const exportDir = path.join(__dirname, "../exports");
     const filePath = path.join(exportDir, "freelancers.csv");
@@ -479,13 +477,14 @@ const exportTableToCsv = async (req, res) => {
 
     res.status(200).json({
       message: "CSV file created successfully",
-      downloadLink: downloadLink,
+      downloadLink: downloadLink
     });
   } catch (error) {
     console.error("Error exporting to CSV:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 const insertSheet = async (req, res) => {
   try {

@@ -50,7 +50,6 @@ const applyForJob = async (req, res) => {
       data: application,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -78,7 +77,6 @@ const deleteApplicationForFriendApplication = async (req, res) => {
 
     res.status(200).json({ message: "Application deleted successfully" });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -100,7 +98,6 @@ const deleteApplicationForFriendJop = async (req, res) => {
 
     res.status(200).json({ message: "Application deleted successfully" });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -149,7 +146,6 @@ const getMyAppliedJobs = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
 };

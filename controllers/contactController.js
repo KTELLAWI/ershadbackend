@@ -24,7 +24,6 @@ const sendMessage = async (req, res) => {
 
     res.status(200).json({ message: "Message sent successfully!" });
   } catch (error) {
-    console.error("Error sending contact message", error);
     res.status(500).json({ message: "An error occurred.", error: error.message });
   }
 };

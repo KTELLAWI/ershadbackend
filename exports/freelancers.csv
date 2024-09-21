@@ -1,2 +1,3 @@
-﻿"fullName","email","phoneNumber","idNumber","city","englishLevel","title","country","jobTitle","degree","graduationYear","willingToRelocate","canWorkRemotely","maritalStatus","status"
-"donkey","donkey@gmail.com","01093291144","1111111145214","اسيوط","جيد جدا","سيدة",,"donkey","بكالريوس","2023","فورا","نعم","اعزب","تم الموافقة"
+﻿"createdAt","title","fullName","phoneNumber","email","city","jobTitle","degree","graduationYear","willingToRelocate","cv","idNumber","englishLevel","country","canWorkRemotely","maritalStatus","status"
+"2024-09-21","سيدة","wow wow wow","01093291144","wow@gmail.com","اسيوط","wow","بكالريوس","2023","فورا","http://localhost:5000/uploads/cvs/2024-09-21T13-35-33.245ZAngelo-Esam-MERN.pdf","1111111145214","جيد جدا","السعوديه","نعم","اعزب","تم الموافقة"
+"2024-09-21","سيدة","hi hi hi ","01093291144","hi@gmail.com","جده","hi","بكالريوس","2022","فورا","http://localhost:5000/uploads/cvs/2024-09-21T13-36-23.527ZAngelo-Esam-MERN.pdf","1111111145214","جيد جدا","السعوديه","نعم","اعزب","تم الموافقة"

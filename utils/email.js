@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
 
 const sendEmail = async (options) => {
-  console.log("hello");
   const transporter = nodemailer.createTransport({
     service: "gmail",
     host: "smtp.gmail.com",
@@ -19,6 +18,5 @@ const sendEmail = async (options) => {
     text: options.message,
   };
   const res = await transporter.sendMail(mailOptions);
-  console.log("res", res);
 };
 module.exports = sendEmail;

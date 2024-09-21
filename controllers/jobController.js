@@ -33,7 +33,6 @@ const createJob = async (req, res) => {
       .status(201)
       .json({ message: "Job added successfully", job: populatedJob });
   } catch (error) {
-    console.error("Error adding job:", error);
     res.status(500).json({ message: "Error adding job", error: error.message });
   }
 };
@@ -69,7 +68,6 @@ const getJobs = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -109,12 +107,11 @@ const getJobsForClientDash = async (req, res) => {
       data: jobs,
       meta: {
         currentPage: page,
-        totalPages: Math.ceil(totalJops / limit) || 1, // Calculate total pages
-        totalCount: totalJops, // Total number of jops
+        totalPages: Math.ceil(totalJops / limit) || 1, 
+        totalCount: totalJops,
       },
     });
   } catch (error) {
-    console.error("Error fetching client jobs:", error);
     res
       .status(500)
       .json({ message: "Error fetching client jobs", error: error.message });
@@ -160,7 +157,6 @@ const getJobsForClientPublic = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching client jobs:", error);
     res
       .status(500)
       .json({ message: "Error fetching client jobs", error: error.message });
@@ -194,7 +190,6 @@ const deleteJob = async (req, res) => {
 
     res.status(200).json({ message: "Job deleted successfully" });
   } catch (error) {
-    console.error("Error deleting job:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -228,7 +223,6 @@ const saveJob = async (req, res) => {
 
     res.status(200).json({ message: "Job saved successfully", savedJobs: job });
   } catch (error) {
-    console.error("Error saving job:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -260,7 +254,6 @@ const unsaveJob = async (req, res) => {
       .status(200)
       .json({ message: "Job unsaved successfully", savedJobs: job });
   } catch (error) {
-    console.error("Error unsaving job:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -285,7 +278,6 @@ const getSingleJob = async (req, res) => {
 
     res.status(200).json({ data: job });
   } catch (error) {
-    console.error("Error retrieving user:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -320,7 +312,6 @@ const updateJobStatus = async (req, res) => {
       job,
     });
   } catch (error) {
-    console.error("Error updating job status:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -358,7 +349,6 @@ const getActivatedJobs = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error retrieving activated jobs:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -406,7 +396,6 @@ const getSavedJobsForUser = async (req, res) => {
       limit,
     });
   } catch (error) {
-    console.error(error);
     return res
       .status(500)
       .json({ message: "An error occurred while fetching saved jobs" });
@@ -439,7 +428,6 @@ const getJobsByClient = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching jobs for client", error);
     res
       .status(500)
       .json({ message: "An error occurred.", error: error.message });

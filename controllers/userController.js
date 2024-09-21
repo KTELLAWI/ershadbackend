@@ -131,11 +131,14 @@ const register = async (req, res) => {
     );
 
     res
-      .cookie("jwtErshad", token, { httpOnly: true,secure:true,sameSite:"None" })
+      .cookie("jwtErshad", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+      })
       .status(201)
       .json({ user: user, message: "User registered successfully" });
   } catch (error) {
-    console.log("Error registering user:", error);
     res
       .status(500)
       .json({ message: "Error registering user", error: error.message });
@@ -188,7 +191,6 @@ const login = async (req, res) => {
       .status(200)
       .json({ user: user, message: "Login successfully" });
   } catch (error) {
-    console.error(error);
     res
       .status(400)
       .json({ message: "Invalid credentials", error: error.message });
@@ -207,7 +209,6 @@ const logout = async (req, res) => {
 
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    console.error(error);
     res
       .status(500)
       .json({ message: "Error logging out", error: error.message });
@@ -216,8 +217,7 @@ const logout = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
-  if (!user)
-    return res.status(400).json({ message: "هذا الايميل غير موجود" });
+  if (!user) return res.status(400).json({ message: "هذا الايميل غير موجود" });
   const resetToken = crypto.randomBytes(20).toString("hex");
   user.passwordResetToken = resetToken;
   user.passwordResetExpires = Date.now() + 10 * 60 * 1000;
@@ -307,7 +307,6 @@ const getAllUsers = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -339,7 +338,6 @@ const getAllClients = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -372,7 +370,6 @@ const getAllFreelancers = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -393,7 +390,6 @@ const profile = async (req, res) => {
       data: user,
     });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -426,7 +422,6 @@ const changePassword = async (req, res) => {
 
     res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
-    console.error("Error changing password:", error.message);
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -448,7 +443,6 @@ const deleteUser = async (req, res) => {
 
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
-    console.error("Error deleting user:", error.message);
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -485,7 +479,6 @@ const updateClient = async (req, res) => {
       .status(200)
       .json({ message: "Client updated successfully", updatedClient });
   } catch (error) {
-    console.error("Error updating client:", error);
     res.status(500).json({
       message: "An error occurred while updating the client",
       error: error.message,
@@ -569,7 +562,6 @@ const updateFreelancer = async (req, res) => {
       freelancer: updatedFreelancer,
     });
   } catch (error) {
-    console.error("Error updating freelancer:", error);
     res.status(500).json({ message: "Error updating freelancer", error });
   }
 };
@@ -590,7 +582,6 @@ const getSingleUser = async (req, res) => {
 
     res.status(200).json({ data: user });
   } catch (error) {
-    console.error("Error retrieving user:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -609,7 +600,6 @@ const getCounts = async (req, res) => {
       JoinFreelaners,
     });
   } catch (error) {
-    console.error("Error fetching counts:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -640,7 +630,6 @@ const getUserRatios = async (req, res) => {
       message: `Clients represent ${clientRatio}% of the total users, while Freelancers represent ${freelancerRatio}%.`,
     });
   } catch (error) {
-    console.error("Error calculating user ratios:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -670,7 +659,6 @@ const toggleAccountStatus = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.error("Error updating account status:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -715,7 +703,6 @@ const getLoginStatsByMonth = async (req, res) => {
       message: "Login statistics fetched successfully",
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch login statistics",
