@@ -15,33 +15,88 @@ const {
   getPendingFreelancers,
 } = require("../controllers/joinFreelancerController.js");
 
-//upload image
+
+
+// Multer storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = path.join(__dirname, "../userImages");
 
+    // Check if the upload directory exists, if not create it
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
-    cb(null, uploadDir);
+    cb(null, uploadDir); // Set upload destination
   },
   filename: (req, file, cb) => {
+    // Create a unique filename with a timestamp
     cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
-  },
+  }
 });
-const upload = multer({ storage: storage });
 
+const upload = multer({ storage: storage });
 const router = express.Router();
-router.get("/export-csv", auth, restrictTo("Admin"), exportTableToCsv);
+
 router.post(
-  "/applyToWork",
-  auth,
+  '/applyToWork',
+  auth, // Authentication middleware
   upload.fields([
-    { name: "cv", maxCount: 1 },
-    { name: "profilePicture", maxCount: 1 },
-  ]),
+    { name: 'cv', maxCount: 1 },
+    { name: 'profilePicture', maxCount: 1 }
+  ]), 
+  // (req, res) => {
+  //   // Debug logs to ensure files and body data are being received
+  //   console.log('Files:', req.files); // Logs uploaded files
+  //   console.log('Body:', req.body);   // Logs the rest of the form fields
+
+  //   // Check if files exist
+  //   if (req.files && req.files.cv && req.files.profilePicture) {
+  //     console.log('CV and profile picture uploaded successfully');
+  //   } else {
+  //     console.log('Files are missing in the request');
+  //   }
+
+
+  //   // Perform your logic to save the data (e.g., to the database)
+
+  //   res.status(201).json({
+  //     message: "Application submitted successfully",
+  //     files: req.files,
+  //     body: req.body
+  //   });
+  // },
   applyToWork
+
 );
+
+
+
+//upload image
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     const uploadDir = path.join(__dirname, "../userImages");
+
+//     if (!fs.existsSync(uploadDir)) {
+//       fs.mkdirSync(uploadDir, { recursive: true });
+//     }
+//     cb(null, uploadDir);
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
+//   },
+// });
+// const upload = multer({ storage: storage });
+
+router.get("/export-csv", auth, restrictTo("Admin"), exportTableToCsv);
+// router.post(
+//   "/applyToWork",
+//  auth,
+//  upload.fields([
+//    { name: "cv", maxCount: 1 },
+//     { name: "profilePicture", maxCount: 1 },
+//   ]),
+// applyToWork
+// );
 router.get("/approved-freelancers", getApprovedFreelancers);
 router.get("/pending-freelancers", auth, getPendingFreelancers);
 router.delete("/delete-join/:id", auth, deleteJoinFreelancerRequest);

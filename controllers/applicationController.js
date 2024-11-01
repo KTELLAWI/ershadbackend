@@ -2,23 +2,62 @@ const User = require("../models/userModel");
 const Job = require("../models/jobModel");
 const Application = require("../models/applicationModel");
 
+
+// Function to export applications to CSV
+// async function exportApplicationsToCSV(jobId) {
+//   try {
+//     // Step 1: Find the job by its ID and populate applications
+//     const job = await Job.findById(jobId)
+//       .populate({
+//         path: 'applications', // Populate applications to get related documents
+//         select: 'resume status appliedDate' // Only select relevant fields
+//       });
+
+//     if (!job) {
+//       throw new Error('Job not found');
+//     }
+
+//     // Step 2: Extract application data
+//     const applicationsData = job.applications.map(app => ({
+//       resume: app.resume,
+//       status: app.status,
+//       applicationDate: app.appliedDate
+//     }));
+
+//     // Step 3: Convert JSON data to CSV format
+//     const json2csvParser = new Parser({ fields: ['resume', 'status', 'applicationDate'] });
+//     const csvData = json2csvParser.parse(applicationsData);
+
+//     // Step 4: Write CSV data to a file in a temporary directory
+//     const filePath = path.join(__dirname, `job_${jobId}_applications.csv`);
+//     fs.writeFileSync(filePath, csvData);
+
+//     return filePath; // Return the file path for download
+//   } catch (error) {
+//     throw new Error('Error exporting applications to CSV: ' + error.message);
+//   }
+// }
+
+
+
 // apply job
 const applyForJob = async (req, res) => {
   try {
-    const freelancerId = req.user._id;
+   // const freelancerId = req.user._id;
     const { jobId, fullName, phone } = req.body;
-    if (!freelancerId || !jobId || !fullName) {
-      return res.status(400).json({
-        message: "All fields (freelancerId, jobId, fullName) are required",
-      });
-    }
-    const freelancer = await User.findById(freelancerId);
-    if (!freelancer || freelancer.role !== "Freelancer") {
-      return res.status(400).json({ message: "User is not a freelancer" });
-    }
+    // if (!freelancerId || !jobId || !fullName) {
+    //   return res.status(400).json({
+    //     message: "All fields (freelancerId, jobId, fullName) are required",
+    //   });
+    // }
+    // const freelancer = await User.findById(freelancerId);
+    // if (!freelancer || freelancer.role !== "Freelancer") {
+    //   return res.status(400).json({ message: "User is not a freelancer" });
+    // }
     const existingApplication = await Application.findOne({
-      freelancer: freelancerId,
-      job: jobId,
+      // freelancer: freelancerId,
+       job: jobId,
+       phone:phone,
     });
     if (existingApplication) {
       return res.status(400).json({ message: "لقد قمت بالتقديم على هذه الوظيفة من قبل." });
@@ -29,13 +68,13 @@ const applyForJob = async (req, res) => {
       return res.status(404).json({ message: "Job not found" });
     }
 
-    const creator = await User.findById(job.createdBy);
-    if (!creator || creator.role !== "Client") {
-      return res.status(400).json({ message: "Job creator is not a client" });
-    }
+    // const creator = await User.findById(job.createdBy);
+    // if (!creator || creator.role !== "Client") {
+    //   return res.status(400).json({ message: "Job creator is not a client" });
+    // }
 
     const application = new Application({
-      freelancer: freelancerId,
+      //freelancer: "freelancerId",
       job: jobId,
       fullName: fullName,
       phone: phone,
@@ -50,7 +89,10 @@ const applyForJob = async (req, res) => {
       data: application,
     });
   } catch (error) {
+    console.log("errrrrrrrrrrrrr",error );
+
     res.status(500).json({ error: error.message });
+       
   }
 };
 //delete application herSelf
@@ -77,6 +119,7 @@ const deleteApplicationForFriendApplication = async (req, res) => {
 
     res.status(200).json({ message: "Application deleted successfully" });
   } catch (error) {
+    console.log("errrrrrrrrrrrrr",error );
     res.status(500).json({ error: error.message });
   }
 };

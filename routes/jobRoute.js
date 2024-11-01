@@ -38,7 +38,9 @@ const router = express.Router();
 
 router.get( "/getJobsForClientDash", auth, getJobsForClientDash );
 router.post("/create", auth, createJob);
-router.get("/", auth, getJobs);
+// router.get("/", auth, getJobs);
+router.get("/", getJobs);
+
 router.get("/activated", getActivatedJobs);
 router.get("/getJobsForClientPublic", auth, getJobsForClientPublic);
 
