@@ -114,7 +114,7 @@ const register = async (req, res) => {
       address,
       bio,
       cv,
-      accountStatus: role == "Admin" ? true : true,
+      accountStatus:false,//role == "Admin" ? true : true,
     });
 
     await user.save();

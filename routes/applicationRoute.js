@@ -32,7 +32,9 @@ const upload = multer({ storage: storage });
 const router = express.Router();
 
 //apply job
-router.post("/apply", auth, upload.single("cv"), applyForJob);
+// router.post("/apply", auth, upload.single("cv"), applyForJob);
+router.post("/apply", upload.single("cv"), applyForJob);
+
 //delete job
 router.delete(
   "/deleteApplicationForFriendApplication/:applicationId",
