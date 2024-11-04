@@ -97,7 +97,7 @@ router.get("/export-csv", auth, restrictTo("Admin"), exportTableToCsv);
 //   ]),
 // applyToWork
 // );
-router.get("/approved-freelancers",activated, getApprovedFreelancers);
+router.get("/approved-freelancers", getApprovedFreelancers);
 router.get("/pending-freelancers", auth, getPendingFreelancers);
 router.delete("/delete-join/:id", auth, deleteJoinFreelancerRequest);
 router.post("/add/csv", auth, upload.single("file"), insertSheet);
