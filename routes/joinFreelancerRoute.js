@@ -100,7 +100,7 @@ router.get("/export-csv", auth, restrictTo("Admin"), exportTableToCsv);
 router.get("/approved-freelancers", getApprovedFreelancers);
 router.get("/pending-freelancers", auth, getPendingFreelancers);
 router.delete("/delete-join/:id", auth, deleteJoinFreelancerRequest);
-router.post("/add/csv", auth, upload.single("file"), insertSheet);
+router.post("/add/csv",upload.single("file"), insertSheet);
 router.get(
   "/singleJoinRequest/:id",
   auth,

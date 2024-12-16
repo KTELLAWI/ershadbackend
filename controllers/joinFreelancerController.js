@@ -698,77 +698,77 @@ const getApprovedFreelancers = async (req, res) => {
 
     const skip = (page - 1) * limit;
     const filter = { status: "تم الموافقة" };
-    if (
-      req.query.jobTitle &&
-      req.query.jobTitle !== "null" &&
-      req.query.jobTitle !== "undefined" &&
-      req.query.jobTitle.trim() !== ""
-    ) {
-      filter.jobTitle = req.query.jobTitle;
-    }
-    if (
-      req.query.city &&
-      req.query.city !== "null" &&
-      req.query.city !== "undefined" &&
-      req.query.city.trim() !== ""
-    ) {
-      filter.city = req.query.city;
-    }
-    if (
-      req.query.country &&
-      req.query.country !== "null" &&
-      req.query.country !== "undefined" &&
-      req.query.country.trim() !== ""
-    ) {
-      filter.country = req.query.country;
-    }
-    if (
-      req.query.englishLevel &&
-      req.query.englishLevel !== "null" &&
-      req.query.englishLevel !== "undefined" &&
-      req.query.englishLevel.trim() !== ""
-    ) {
-      filter.englishLevel = req.query.englishLevel;
-    }
-    if (
-      req.query.degree &&
-      req.query.degree !== "null" &&
-      req.query.degree !== "undefined" &&
-      req.query.degree.trim() !== ""
-    ) {
-      filter.degree = req.query.degree;
-    }
-    if (
-      req.query.willingToRelocate &&
-      req.query.willingToRelocate !== "null" &&
-      req.query.willingToRelocate !== "undefined" &&
-      req.query.willingToRelocate.trim() !== ""
-    ) {
-      filter.willingToRelocate = req.query.willingToRelocate;
-    }
-    if (
-      req.query.canWorkRemotely &&
-      req.query.canWorkRemotely !== "null" &&
-      req.query.canWorkRemotely !== "undefined" &&
-      req.query.canWorkRemotely.trim() !== ""
-    ) {
-      filter.canWorkRemotely = req.query.canWorkRemotely;
-    }
-    if (
-      req.query.maritalStatus &&
-      req.query.maritalStatus !== "null" &&
-      req.query.maritalStatus !== "undefined" &&
-      req.query.maritalStatus.trim() !== ""
-    ) {
-      filter.maritalStatus = req.query.maritalStatus;
-    }
-    const freelancers = await joinFreelancer.find(filter)
+    // if (
+    //   req.query.jobTitle &&
+    //   req.query.jobTitle !== "null" &&
+    //   req.query.jobTitle !== "undefined" &&
+    //   req.query.jobTitle.trim() !== ""
+    // ) {
+    //   filter.jobTitle = req.query.jobTitle;
+    // }
+    // if (
+    //   req.query.city &&
+    //   req.query.city !== "null" &&
+    //   req.query.city !== "undefined" &&
+    //   req.query.city.trim() !== ""
+    // ) {
+    //   filter.city = req.query.city;
+    // }
+    // if (
+    //   req.query.country &&
+    //   req.query.country !== "null" &&
+    //   req.query.country !== "undefined" &&
+    //   req.query.country.trim() !== ""
+    // ) {
+    //   filter.country = req.query.country;
+    // }
+    // if (
+    //   req.query.englishLevel &&
+    //   req.query.englishLevel !== "null" &&
+    //   req.query.englishLevel !== "undefined" &&
+    //   req.query.englishLevel.trim() !== ""
+    // ) {
+    //   filter.englishLevel = req.query.englishLevel;
+    // }
+    // if (
+    //   req.query.degree &&
+    //   req.query.degree !== "null" &&
+    //   req.query.degree !== "undefined" &&
+    //   req.query.degree.trim() !== ""
+    // ) {
+    //   filter.degree = req.query.degree;
+    // }
+    // if (
+    //   req.query.willingToRelocate &&
+    //   req.query.willingToRelocate !== "null" &&
+    //   req.query.willingToRelocate !== "undefined" &&
+    //   req.query.willingToRelocate.trim() !== ""
+    // ) {
+    //   filter.willingToRelocate = req.query.willingToRelocate;
+    // }
+    // if (
+    //   req.query.canWorkRemotely &&
+    //   req.query.canWorkRemotely !== "null" &&
+    //   req.query.canWorkRemotely !== "undefined" &&
+    //   req.query.canWorkRemotely.trim() !== ""
+    // ) {
+    //   filter.canWorkRemotely = req.query.canWorkRemotely;
+    // }
+    // if (
+    //   req.query.maritalStatus &&
+    //   req.query.maritalStatus !== "null" &&
+    //   req.query.maritalStatus !== "undefined" &&
+    //   req.query.maritalStatus.trim() !== ""
+    // ) {
+    //   filter.maritalStatus = req.query.maritalStatus;
+    // }
+    const freelancers = await joinFreelancer.find()
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .exec();
 
-    const totalFreelancers = await joinFreelancer.countDocuments(filter);
+    const totalFreelancers = await joinFreelancer.countDocuments();
 
     res.status(200).json({
       data: freelancers,
@@ -1277,67 +1277,108 @@ const exportTableToCsv = async (req, res) => {
 
 const insertSheet = async (req, res) => {
   try {
+    console.log("hhhhh");
     if (!req.file) {
       return res.status(400).json({ message: "No file found" });
     }
 
     const filePath = path.join(__dirname, "../userImages", req.file.filename);
+    console.log("hhhhh", filePath);
+
+    // const excelData = excelToJson({
+    //   sourceFile: filePath,
+    //   header: { rows: 1 },
+    //   columnToKey: {
+    //     A: "fullName",
+    //     B: "currentJobTitleEn",
+    //     C: "currentJobTitleAr",
+    //     D: "specialtyNameAr",
+    //     E: "phoneNumber",
+    //     F: "email",
+    //     G: "qualification",
+    //     H: "universityName",
+    //     I: "specaialtyExperience",
+    //     J: "totalExperience",
+    //     K: "nationality",
+    //     L: "gender",
+    //     M: "currentlyEmployed",
+    //     O: "resume"
+    //   },
+    // });
+
+    // const sheetName = Object.keys(excelData)[0];
+    // const sheetData = excelData[sheetName];
+    // console.log("sheetData", sheetData)
 
     const excelData = excelToJson({
       sourceFile: filePath,
-      header: { rows: 1 },
+      header: { rows: 1 }, // Skip the first row as headers
       columnToKey: {
-        A: "title",
-        B: "fullName",
-        C: "phoneNumber",
-        D: "email",
-        E: "city",
-        F: "jobTitle",
-        G: "degree",
-        H: "graduationYear",
-        I: "willingToRelocate",
-        J: "cv",
-        K: "idNumber",
-        L: "englishLevel",
-        M: "canWorkRemotely",
+        A: "fullName",
+        B: "currentJobTitleEn",
+        C: "currentJobTitleAr",
+        D: "specialtyNameAr",
+        E: "phoneNumber",
+        F: "email",
+        I: "specialtyExperience",
+        J: "totalExperience",
+        G: "qualification",
+        K: "nationality",
+        L: "gender",
+        M: "currentlyEmployed",
+        N: "skills",
+        H: "universityName",
+        O: "resume",
       },
     });
+    console.log("Processed Data:", excelData.file.length);
+    console.log("Processed Data:", excelData);
 
-    const sheetName = Object.keys(excelData)[0];
+    const sheetName = Object.keys(excelData);
     const sheetData = excelData[sheetName];
+
+    // const sheetNames = Object.keys(excelData);
+    console.log("sheetNames Data:", sheetData);
+
+    // if (sheetNames.length > 0) {
+    //   const rawSheetData = excelData[sheetNames[0]];
+    //   console.log("Raw Sheet Data:", rawSheetData);
+    // } else {
+    //   console.log("No sheets found.");
+    // }
+
 
     if (!sheetData || sheetData.length === 0) {
       return res.status(400).json({ message: "No data found in the Excel file" });
     }
 
     const bulkOps = sheetData.map(row => {
-      const graduationYearValue = row["graduationYear"];
-      let graduationYear = null;
-
-      if (typeof graduationYearValue === "string") {
-        const match = graduationYearValue.match(/\d{4}/);
-        graduationYear = match ? parseInt(match[0]) : null;
-      } else if (typeof graduationYearValue === "number") {
-        graduationYear = graduationYearValue;
-      }
 
       const record = {
-        title: row["title"],
         fullName: row["fullName"],
-        phoneNumber: row["phoneNumber"],
+        currentJobTitleEn: row["currentJobTitleEn"],
+        currentJobTitleAr: row["currentJobTitleAr"],
+        specialtyNameAr: row["specialtyNameAr"],
+        qualification: row["qualification"],
+        universityName: row["universityName"],
+        specialtyExperience: row["specialtyExperience"],
+        totalExperience: row["totalExperience"],
+        nationality: row["nationality"],
         email: row["email"],
-        city: row["city"],
-        jobTitle: row["jobTitle"],
-        degree: row["degree"],
-        graduationYear,
-        willingToRelocate: row["willingToRelocate"],
-        cv: row["cv"],
-        idNumber: row["idNumber"],
-        englishLevel: row["englishLevel"],
-        canWorkRemotely: row["canWorkRemotely"],
-        status: "تم الموافقة",
+        phoneNumber: row["phoneNumber"],
+        gender: row["gender"],
+        currentlyEmployed: row["currentlyEmployed"],
+        skills: row["skills"],
+        resume: row["resume"],
       };
 
+
+      // return {
+      //   insertOne: {
+      //     document: record,
+      //   },
+      // }
+    
       return {
         updateOne: {
           filter: { $or: [{ phoneNumber: record.phoneNumber }, { email: record.email }] },
@@ -1346,6 +1387,7 @@ const insertSheet = async (req, res) => {
         }
       };
     });
+    console.log("record", bulkOps.length)
 
     // Execute all operations in bulk
     await joinFreelancer.bulkWrite(bulkOps);

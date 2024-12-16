@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const Job = require("../models/jobModel");
 const Application = require("../models/applicationModel");
+const emailingjobform = require("../utils/sendJobFormEmail"); 
 
 
 // Function to export applications to CSV
@@ -38,61 +39,72 @@ const Application = require("../models/applicationModel");
 //   }
 // }
 
+////email emailJobForm
+const emailJobForm = async (req, res) => {
+  try {
+    const data = req.body;
+    console.log("data", data);
 
+
+    const cvPath = req.file ? req.file.filename : null;
+     const options= {...data , resume:cvPath};
+     await emailingjobform(options)
+   
+
+  
+    
+    res.status(201).json({
+      message: "Application submitted successfully",
+    });
+  } catch (error) {
+    console.log("erorrr", error);
+
+    res.status(500).json({ error: error.message });
+
+  }
+};
 
 // apply job
 const applyForJob = async (req, res) => {
   try {
-   // const freelancerId = req.user._id;
-    const { jobId, fullName, phone } = req.body;
-    // if (!freelancerId || !jobId || !fullName) {
-    //   return res.status(400).json({
-    //     message: "All fields (freelancerId, jobId, fullName) are required",
-    //   });
-    // }
-    // const freelancer = await User.findById(freelancerId);
-    // if (!freelancer || freelancer.role !== "Freelancer") {
-    //   return res.status(400).json({ message: "User is not a freelancer" });
-    // }
+    const data = req.body;
+    console.log("data", data);
+
+    const { job, phoneNumber } = data;
+   
     const existingApplication = await Application.findOne({
-      // freelancer: freelancerId,
-       job: jobId,
-       phone:phone,
+      job: job,
+      phoneNumber: phoneNumber,
     });
     if (existingApplication) {
       return res.status(400).json({ message: "لقد قمت بالتقديم على هذه الوظيفة من قبل." });
     }
     const cvPath = req.file ? req.file.filename : null;
-    const job = await Job.findById(jobId);
-    if (!job) {
+    const joboffer = await Job.findById(job);
+    if (!joboffer) {
       return res.status(404).json({ message: "Job not found" });
     }
 
-    // const creator = await User.findById(job.createdBy);
-    // if (!creator || creator.role !== "Client") {
-    //   return res.status(400).json({ message: "Job creator is not a client" });
-    // }
-
+  
     const application = new Application({
-      //freelancer: "freelancerId",
-      job: jobId,
-      fullName: fullName,
-      phone: phone,
-      cv: cvPath,
-    });
+      ...data,
+      resume: cvPath
+    }
 
+    );
+    console.log("application", application);
     await application.save();
-    job.applications.push(application._id);
-    await job.save();
+    joboffer.applications.push(application._id);
+    await joboffer.save();
     res.status(201).json({
       message: "Application submitted successfully",
       data: application,
     });
   } catch (error) {
-    console.log("errrrrrrrrrrrrr",error );
+    console.log("errrrrrrrrrrrrr", error);
 
     res.status(500).json({ error: error.message });
-       
+
   }
 };
 //delete application herSelf
@@ -119,7 +131,7 @@ const deleteApplicationForFriendApplication = async (req, res) => {
 
     res.status(200).json({ message: "Application deleted successfully" });
   } catch (error) {
-    console.log("errrrrrrrrrrrrr",error );
+    console.log("errrrrrrrrrrrrr", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -198,4 +210,5 @@ module.exports = {
   deleteApplicationForFriendApplication,
   getMyAppliedJobs,
   deleteApplicationForFriendJop,
+  emailJobForm
 };

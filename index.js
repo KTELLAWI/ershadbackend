@@ -48,6 +48,7 @@ app.use("/api/job", jobRoutes);
 app.use("/api/application", applicationRoutes);
 app.use("/api/work", JoinFreelancer);
 app.use("/api/contact", contactRoute);
+app.use("/api/application", applicationRoutes);
 //statics
 app.use("/userImages", express.static("userImages"));
 app.use("/exports", express.static("exports"));

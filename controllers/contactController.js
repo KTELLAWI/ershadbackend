@@ -1,7 +1,7 @@
 const Contact = require("../models/contactModel");
-const sendEmail = require("../utils/email"); 
+const sendEmail = require("../utils/email");
 
-const projectOwnerEmail = process.env.EMAIL; 
+const projectOwnerEmail = process.env.EMAIL;
 
 const sendMessage = async (req, res) => {
   const { name, email, message } = req.body;
@@ -15,9 +15,10 @@ const sendMessage = async (req, res) => {
     await newContact.save();
 
     const mailOptions = {
-      email: projectOwnerEmail, 
-      subject: "New Contact Message",
-      message: `You have a new message from ${name} (${email}):\n\n${message}`
+      name: name,
+      email: email,
+      subject: " طلب اتصال عن  طريق الموقع",
+      message: `\n\n${message}`
     };
 
     await sendEmail(mailOptions);

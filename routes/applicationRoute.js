@@ -7,12 +7,14 @@ const fs = require("fs");
 const { auth } = require("../middlewares/auth.js");
 const {
   applyForJob,
+  emailJobForm,
   deleteApplicationForFriendApplication,
   deleteApplicationForFriendJop,
   getMyAppliedJobs,
 } = require("../controllers/applicationController.js");
 const Job = require("../models/jobModel");
 const mongoose = require("mongoose");
+const { route } = require("./userRoute.js");
 //upload image
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -33,8 +35,8 @@ const router = express.Router();
 
 //apply job
 // router.post("/apply", auth, upload.single("cv"), applyForJob);
-router.post("/apply", upload.single("cv"), applyForJob);
-
+router.post("/apply",upload.single("resume"),applyForJob);
+// upload.single("resume"), 
 //delete job
 router.delete(
   "/deleteApplicationForFriendApplication/:applicationId",
@@ -103,4 +105,8 @@ router.get('/export-applications/:jobId', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+router.post("/sendjobform",upload.single("resume"),emailJobForm);
+{
+
+}
 module.exports = router;
