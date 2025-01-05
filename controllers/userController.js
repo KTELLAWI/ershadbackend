@@ -223,7 +223,7 @@ const forgotPassword = async (req, res) => {
   user.passwordResetToken = resetToken;
   user.passwordResetExpires = Date.now() + 10 * 60 * 1000;
   await user.save({ validateBeforeSave: false });
-  const resetURL = `https://dev.ershad-sa.com/changePassword/${resetToken}`;
+  const resetURL = `https://ershad-sa.com/changePassword/${resetToken}`;
 
   const message = `نسيت كلمة المرور؟\nيمكنك اعادة تعيين كلمة المرور الجديدة عبر الرابط التالي:\n${resetURL}\n\nإذا لم تكن قد نسيت كلمة المرور الخاصة بك، يرجى تجاهل هذه الرسالة!`;
   const options = { message, email:user.email, subject: "رمز إعادة تعيين كلمة المرور الخاص بك (صالح لمدة 10 دقائق)" };
