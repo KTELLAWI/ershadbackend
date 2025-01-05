@@ -35,7 +35,7 @@ const router = express.Router();
 
 //apply job
 // router.post("/apply", auth, upload.single("cv"), applyForJob);
-router.post("/apply",upload.single("resume"),applyForJob);
+router.post("/apply", upload.single("resume"), applyForJob);
 // upload.single("resume"), 
 //delete job
 router.delete(
@@ -57,7 +57,7 @@ async function exportApplicationsToCSV(jobId) {
     const job = await Job.findById(jobId)
       .populate({
         path: 'applications', // Populate applications to get related documents
-        select: 'cv fullName phone' // Only select relevant fields
+        select: '	fullName 	phoneNumber	resume	currentJobTitleEn	currentJobTitleAr	specialtyNameAr	qualification	universityName	specialtyExperience	totalExperience	nationality	email	gender	currentlyEmployed	skills' // Only select relevant fields
       });
 
     if (!job) {
@@ -66,18 +66,32 @@ async function exportApplicationsToCSV(jobId) {
 
     // Step 2: Extract application data
     const applicationsData = job.applications.map(app => ({
-      cv: app.cv,
       fullName: app.fullName,
-      phone: app.phone
+      phoneNumber: app.phoneNumber,
+      resume: `https://backend.ershad-sa.com/userImages/${app.resume}` ,
+      currentJobTitleEn: app.currentJobTitleEn,
+      currentJobTitleAr: app.currentJobTitleAr,
+      specialtyNameAr: app.specialtyNameAr,
+      qualification: app.qualification,
+      universityName: app.universityName,
+      specialtyExperience: app.specialtyExperience,
+      totalExperience: app.totalExperience,
+      nationality: app.nationality,
+      email: app.email,
+      gender: app.gender,
+      currentlyEmployed: app.currentlyEmployed,
+      skills: app.skills,
     }));
 
     // Step 3: Convert JSON data to CSV format
-    const json2csvParser = new Parser({ fields: ['fullName', 'phone', 'cv'] });
+    const json2csvParser = new Parser({ fields: ["fullName", "phoneNumber", "resume", "currentJobTitleEn", "currentJobTitleAr", "specialtyNameAr", "qualification", "universityName", "specialtyExperience", "totalExperience", "nationality", "email", "gender", "currentlyEmployed", "skills"] });
     const csvData = json2csvParser.parse(applicationsData);
 
     // Step 4: Write CSV data to a file in a temporary directory
-    const filePath = path.join(__dirname, `job_${jobId}_applications.csv`);
-    fs.writeFileSync(filePath, csvData);
+    const filePath = path.join(__dirname, `job_${ jobId }_applications.csv`);
+    // fs.writeFileSync(filePath, csvData);
+    fs.writeFileSync(filePath, "\uFEFF" + csvData, { encoding: 'utf8' }); // Add BOM and set encoding to UTF-8
+
 
     return filePath; // Return the file path for download
   } catch (error) {
@@ -105,7 +119,7 @@ router.get('/export-applications/:jobId', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-router.post("/sendjobform",upload.single("resume"),emailJobForm);
+router.post("/sendjobform", upload.single("resume"), emailJobForm);
 {
 
 }

@@ -697,63 +697,64 @@ const getApprovedFreelancers = async (req, res) => {
     }
 
     const skip = (page - 1) * limit;
-    const filter = { status: "تم الموافقة" };
-    // if (
-    //   req.query.jobTitle &&
-    //   req.query.jobTitle !== "null" &&
-    //   req.query.jobTitle !== "undefined" &&
-    //   req.query.jobTitle.trim() !== ""
-    // ) {
-    //   filter.jobTitle = req.query.jobTitle;
-    // }
-    // if (
-    //   req.query.city &&
-    //   req.query.city !== "null" &&
-    //   req.query.city !== "undefined" &&
-    //   req.query.city.trim() !== ""
-    // ) {
-    //   filter.city = req.query.city;
-    // }
-    // if (
-    //   req.query.country &&
-    //   req.query.country !== "null" &&
-    //   req.query.country !== "undefined" &&
-    //   req.query.country.trim() !== ""
-    // ) {
-    //   filter.country = req.query.country;
-    // }
-    // if (
-    //   req.query.englishLevel &&
-    //   req.query.englishLevel !== "null" &&
-    //   req.query.englishLevel !== "undefined" &&
-    //   req.query.englishLevel.trim() !== ""
-    // ) {
-    //   filter.englishLevel = req.query.englishLevel;
-    // }
-    // if (
-    //   req.query.degree &&
-    //   req.query.degree !== "null" &&
-    //   req.query.degree !== "undefined" &&
-    //   req.query.degree.trim() !== ""
-    // ) {
-    //   filter.degree = req.query.degree;
-    // }
-    // if (
-    //   req.query.willingToRelocate &&
-    //   req.query.willingToRelocate !== "null" &&
-    //   req.query.willingToRelocate !== "undefined" &&
-    //   req.query.willingToRelocate.trim() !== ""
-    // ) {
-    //   filter.willingToRelocate = req.query.willingToRelocate;
-    // }
-    // if (
-    //   req.query.canWorkRemotely &&
-    //   req.query.canWorkRemotely !== "null" &&
-    //   req.query.canWorkRemotely !== "undefined" &&
-    //   req.query.canWorkRemotely.trim() !== ""
-    // ) {
-    //   filter.canWorkRemotely = req.query.canWorkRemotely;
-    // }
+    // const filter = { status: "تم الموافقة" };
+    const filter = {};
+    if (
+      req.query.currentJobTitleAr &&
+      req.query.currentJobTitleAr !== "null" &&
+      req.query.currentJobTitleAr !== "undefined" &&
+      req.query.currentJobTitleAr.trim() !== ""
+    ) {
+      filter.currentJobTitleAr = req.query.currentJobTitleAr;
+    }
+    if (
+      req.query.specialtyNameAr &&
+      req.query.specialtyNameAr !== "null" &&
+      req.query.specialtyNameAr !== "undefined" &&
+      req.query.specialtyNameAr.trim() !== ""
+    ) {
+      filter.specialtyNameAr = req.query.specialtyNameAr;
+    }
+    if (
+      req.query.qualification &&
+      req.query.qualification !== "null" &&
+      req.query.qualification !== "undefined" &&
+      req.query.qualification.trim() !== ""
+    ) {
+      filter.qualification = req.query.qualification;
+    }
+    if (
+      req.query.currentlyEmployed &&
+      req.query.currentlyEmployed !== "null" &&
+      req.query.currentlyEmployed !== "undefined" &&
+      req.query.currentlyEmployed.trim() !== ""
+    ) {
+      filter.currentlyEmployed = req.query.currentlyEmployed;
+    }
+    if (
+      req.query.gender &&
+      req.query.gender !== "null" &&
+      req.query.gender !== "undefined" &&
+      req.query.gender.trim() !== ""
+    ) {
+      filter.gender = req.query.gender;
+    }
+    if (
+      req.query.nationality &&
+      req.query.nationality !== "null" &&
+      req.query.nationality !== "undefined" &&
+      req.query.nationality.trim() !== ""
+    ) {
+      filter.nationality = req.query.nationality;
+    }
+    if (
+      req.query.totalExperience &&
+      req.query.totalExperience !== "null" &&
+      req.query.totalExperience !== "undefined" &&
+      req.query.totalExperience.trim() !== ""
+    ) {
+      filter.totalExperience = req.query.totalExperience;
+    }
     // if (
     //   req.query.maritalStatus &&
     //   req.query.maritalStatus !== "null" &&
@@ -762,13 +763,13 @@ const getApprovedFreelancers = async (req, res) => {
     // ) {
     //   filter.maritalStatus = req.query.maritalStatus;
     // }
-    const freelancers = await joinFreelancer.find()
+    const freelancers = await joinFreelancer.find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .exec();
 
-    const totalFreelancers = await joinFreelancer.countDocuments();
+    const totalFreelancers = await joinFreelancer.countDocuments(filter);
 
     res.status(200).json({
       data: freelancers,
@@ -1021,52 +1022,66 @@ const updateJoinRequest = async (req, res) => {
 
 const exportTableToCsv = async (req, res) => {
   try {
-    const freelancers = await joinFreelancer.find({ status: "تم الموافقة" });
+    const freelancers = await joinFreelancer.find();
 
     const headers = [
-      "createdAt",
-      "title",
       "fullName",
+      "currentJobTitleEn",
+      "currentJobTitleAr",
+      "specialtyNameAr",
       "phoneNumber",
       "email",
-      "city",
-      "jobTitle",
-      "degree",
-      "graduationYear",
-      "willingToRelocate",
-      "cv",
-      "idNumber",
-      "englishLevel",
-      "country",
-      "canWorkRemotely",
-      "maritalStatus",
-      "status",
+      "specialtyExperience",
+      "totalExperience",
+      "qualification",
+      "nationality",
+      "gender",
+      "currentlyEmployed",
+      "skills",
+      "universityName",
+      "resume",
     ];
 
     const rows = freelancers.map((freelancer) => ({
-      createdAt: freelancer.createdAt
-        ? freelancer.createdAt.toISOString().split("T")[0]
-        : "",
-      title: freelancer.title,
-      fullName: freelancer.fullName,
-      phoneNumber: freelancer.phoneNumber,
-      email: freelancer.email,
-      city: freelancer.city,
-      jobTitle: freelancer.jobTitle,
-      degree: freelancer.degree,
-      graduationYear: freelancer.graduationYear,
-      willingToRelocate: freelancer.willingToRelocate,
-      cv: freelancer.cv
-        ? `${req.protocol}://${req.headers.host}/uploads/cvs/${freelancer.cv}`
-        : "",
-      idNumber: freelancer.idNumber,
-      englishLevel: freelancer.englishLevel,
-      country: freelancer.country,
-      canWorkRemotely: freelancer.canWorkRemotely,
-      maritalStatus: freelancer.maritalStatus,
-      status: freelancer.status,
-    }));
+      fullName: freelancer?.fullName || "",
+      currentJobTitleEn: freelancer?.currentJobTitleEn || "",
+      currentJobTitleAr: freelancer?.currentJobTitleAr || "",
+      specialtyNameAr: freelancer?.specialtyNameAr || "",
+      phoneNumber: freelancer?.phoneNumber || "",
+      email: freelancer?.email || "",
+      specialtyExperience: freelancer?.specialtyExperience || "",
+      totalExperience: freelancer?.totalExperience || "",
+      qualification: freelancer?.qualification || "",
+      nationality: freelancer?.nationality || "",
+      gender: freelancer?.gender || "",
+      currentlyEmployed: freelancer?.currentlyEmployed || "",
+      skills: freelancer?.skills || "",
+      universityName: freelancer?.universityName || "",
+      resume: freelancer?.resume || "",
 
+      // createdAt: freelancer.createdAt
+      //   ? freelancer.createdAt.toISOString().split("T")[0]
+      //   : "",
+      // title: freelancer.title,
+      // fullName: freelancer.fullName,
+      // phoneNumber: freelancer.phoneNumber,
+      // email: freelancer.email,
+      // city: freelancer.city,
+      // jobTitle: freelancer.jobTitle,
+      // degree: freelancer.degree,
+      // graduationYear: freelancer.graduationYear,
+      // willingToRelocate: freelancer.willingToRelocate,
+      // cv: freelancer.cv
+      //   ? c`
+      //   : "",
+      // idNumber: freelancer.idNumber,
+      // englishLevel: freelancer.englishLevel,
+      // country: freelancer.country,
+      // canWorkRemotely: freelancer.canWorkRemotely,
+      // maritalStatus: freelancer.maritalStatus,
+      // status: freelancer.status,
+    }));
+console.log("rows",rows);
     const csv = json2csv(rows, { header: true, fields: headers });
 
     const exportDir = path.join(__dirname, "../exports");
@@ -1078,7 +1093,7 @@ const exportTableToCsv = async (req, res) => {
 
     fs.writeFileSync(filePath, "\uFEFF" + csv, "utf-8");
 
-    const downloadLink = `${req.protocol}://${req.headers.host}/api/work/download/freelancers.csv`;
+    const downloadLink = `https://${req.headers.host}/api/work/download/freelancers.csv`;
 
     res.status(200).json({
       message: "CSV file created successfully",
@@ -1110,7 +1125,7 @@ const exportTableToCsv = async (req, res) => {
 //         A: "title",
 //         B: "fullName",
 //         C: "phoneNumber",
-//         D: "email",
+//         D: "email",f
 //         E: "city",
 //         F: "jobTitle",
 //         G: "degree",
@@ -1277,7 +1292,7 @@ const exportTableToCsv = async (req, res) => {
 
 const insertSheet = async (req, res) => {
   try {
-    console.log("hhhhh");
+    // console.log("hhhhh");
     if (!req.file) {
       return res.status(400).json({ message: "No file found" });
     }
@@ -1378,7 +1393,7 @@ const insertSheet = async (req, res) => {
       //     document: record,
       //   },
       // }
-    
+
       return {
         updateOne: {
           filter: { $or: [{ phoneNumber: record.phoneNumber }, { email: record.email }] },

@@ -36,13 +36,13 @@ const upload = multer({ storage: storage });
 
 const router = express.Router();
 
-router.get( "/getJobsForClientDash", auth, getJobsForClientDash );
+router.get( "/getJobsForClientDash", getJobsForClientDash );
 router.post("/create", auth, createJob);
 // router.get("/", auth, getJobs);
 router.get("/", getJobs);
 
 router.get("/activated", getActivatedJobs);
-router.get("/getJobsForClientPublic", auth, getJobsForClientPublic);
+router.get("/getJobsForClientPublic", getJobsForClientPublic);
 
 router.post("/save-job", auth, saveJob);
 router.post("/unsave-job", auth, unsaveJob);

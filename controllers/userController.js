@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const { default: mongoose } = require("mongoose");
 const Job = require("../models/jobModel");
 const JoinFreelaner = require("../models/joinFreelancerModel");
-const sendEmail = require("../utils/email");
+const sendPassWordEmail = require("../utils/passwordEmail");
 //regiser
 const register = async (req, res) => {
   const {
@@ -183,9 +183,10 @@ const login = async (req, res) => {
 
     res
       .cookie("jwtErshad", token, {
-        httpOnly: process.env.NODE_ENV === "production",
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "None",
+        httpOnly: true,//process.env.NODE_ENV === "production",
+        secure: false,//process.env.NODE_ENV === "production",
+        sameSite: "none",
+        path: "/",
         expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
       })
       .status(200)
@@ -222,15 +223,13 @@ const forgotPassword = async (req, res) => {
   user.passwordResetToken = resetToken;
   user.passwordResetExpires = Date.now() + 10 * 60 * 1000;
   await user.save({ validateBeforeSave: false });
-  const resetURL = `${process.env.BASE_URL}/changePassword/${resetToken}`;
+  const resetURL = `https://dev.ershad-sa.com/changePassword/${resetToken}`;
 
-  const message = ` Forgot your password? Submit with your new password to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
+  const message = `نسيت كلمة المرور؟\nيمكنك اعادة تعيين كلمة المرور الجديدة عبر الرابط التالي:\n${resetURL}\n\nإذا لم تكن قد نسيت كلمة المرور الخاصة بك، يرجى تجاهل هذه الرسالة!`;
+  const options = { message, email:user.email, subject: "رمز إعادة تعيين كلمة المرور الخاص بك (صالح لمدة 10 دقائق)" };
+
   try {
-    await sendEmail({
-      email: user.email,
-      subject: "Your password reset token (valid for 10 min)",
-      message,
-    });
+    await sendPassWordEmail(options);
 
     res.status(200).json({
       status: "success",

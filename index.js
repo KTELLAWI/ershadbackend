@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(
   cors(
     {
-      origin: ["https://dev.ershad-sa.com","https://ershad-sa.com", "https://literate-space-rotary-phone-94jqpx545rfp9pr-3000.app.github.dev", "http://localhost:3000", "http://18.153.95.90:3000", "http://tellawi.rest:3000", "https://tellawi.rest"],
+      origin: ["https://dev.ershad-sa.com","http://dev.ershad-sa.com","https://ershad-sa.com", "https://literate-space-rotary-phone-94jqpx545rfp9pr-3000.app.github.dev", "http://localhost:3000", "http://18.153.95.90:3000", "http://tellawi.rest:3000", "https://tellawi.rest"],
       methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],

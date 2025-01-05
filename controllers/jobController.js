@@ -29,6 +29,7 @@ const createJob = async (req, res) => {
       select: "companyName companyLogo email",
     });
 
+    
     res
       .status(201)
       .json({ message: "Job added successfully", job: populatedJob });
@@ -365,24 +366,24 @@ const getSavedJobsForUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid limit" });
     }
 
-    const userId = req.params.userId;
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid user ID" });
-    }
-    const userIdOnly = await User.findById(userId);
-    const user = await User.findById(userId)
-      .populate({
-        path: "savedJobs",
-        select: "description status createdBy",
-        populate: {
-          path: "createdBy",
-          select: "companyName email companyLogo",
-        },
-      })
-      .sort({ createdAt: -1 });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    // const userId = req.params.userId;
+    // if (!mongoose.Types.ObjectId.isValid(userId)) {
+    //   return res.status(400).json({ message: "Invalid user ID" });
+    // }
+    // const userIdOnly = await User.findById(userId);
+    // const user = await User.findById(userId)
+    //   .populate({
+    //     path: "savedJobs",
+    //     select: "description status createdBy",
+    //     populate: {
+    //       path: "createdBy",
+    //       select: "companyName email companyLogo",
+    //     },
+    //   })
+    //   .sort({ createdAt: -1 });
+    // if (!user) {
+    //   return res.status(404).json({ message: "User not found" });
+    // }
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const savedJobs = user.savedJobs.slice(startIndex, endIndex);

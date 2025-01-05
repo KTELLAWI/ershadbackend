@@ -1,7 +1,7 @@
 const User = require("../models/userModel");
 const Job = require("../models/jobModel");
 const Application = require("../models/applicationModel");
-const emailingjobform = require("../utils/sendJobFormEmail"); 
+const emailingjobform = require("../utils/sendJobFormEmail");
 
 
 // Function to export applications to CSV
@@ -47,12 +47,12 @@ const emailJobForm = async (req, res) => {
 
 
     const cvPath = req.file ? req.file.filename : null;
-     const options= {...data , resume:cvPath};
-     await emailingjobform(options)
-   
+    const options = { ...data, resume: `https://backend.ershad-sa.com/userImages//${cvPath}` };
+    await emailingjobform(options)
 
-  
-    
+
+
+
     res.status(201).json({
       message: "Application submitted successfully",
     });
@@ -71,7 +71,7 @@ const applyForJob = async (req, res) => {
     console.log("data", data);
 
     const { job, phoneNumber } = data;
-   
+
     const existingApplication = await Application.findOne({
       job: job,
       phoneNumber: phoneNumber,
@@ -85,7 +85,7 @@ const applyForJob = async (req, res) => {
       return res.status(404).json({ message: "Job not found" });
     }
 
-  
+
     const application = new Application({
       ...data,
       resume: cvPath
