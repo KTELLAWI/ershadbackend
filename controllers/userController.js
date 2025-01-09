@@ -3,7 +3,7 @@ const User = require("../models/userModel");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, trusted } = require("mongoose");
 const Job = require("../models/jobModel");
 const JoinFreelaner = require("../models/joinFreelancerModel");
 const sendPassWordEmail = require("../utils/passwordEmail");
@@ -137,7 +137,7 @@ const register = async (req, res) => {
         sameSite: "None",
       })
       .status(201)
-      .json({ user: user, message: "User registered successfully" });
+      .json({ user: user,token:token, message: "User registered successfully" });
   } catch (error) {
     res
       .status(500)
@@ -184,13 +184,13 @@ const login = async (req, res) => {
     res
       .cookie("jwtErshad", token, {
         httpOnly: true,//process.env.NODE_ENV === "production",
-        secure: false,//process.env.NODE_ENV === "production",
+        secure: true,//process.env.NODE_ENV === "production",
         sameSite: "none",
         path: "/",
         expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
       })
       .status(200)
-      .json({ user: user, message: "Login successfully" });
+      .json({ user: user,token:token, message: "Login successfully" });
   } catch (error) {
     res
       .status(400)

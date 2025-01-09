@@ -1025,21 +1025,21 @@ const exportTableToCsv = async (req, res) => {
     const freelancers = await joinFreelancer.find();
 
     const headers = [
-      "fullName",
       "currentJobTitleEn",
       "currentJobTitleAr",
       "specialtyNameAr",
-      "phoneNumber",
-      "email",
+      "qualification",
+      "universityName",
       "specialtyExperience",
       "totalExperience",
-      "qualification",
+      "fullName",
       "nationality",
+      "email",
+      "phoneNumber",
       "gender",
       "currentlyEmployed",
       "skills",
-      "universityName",
-      "resume",
+      "resume"
     ];
 
     const rows = freelancers.map((freelancer) => ({
@@ -1081,7 +1081,7 @@ const exportTableToCsv = async (req, res) => {
       // maritalStatus: freelancer.maritalStatus,
       // status: freelancer.status,
     }));
-console.log("rows",rows);
+    console.log("rows", rows);
     const csv = json2csv(rows, { header: true, fields: headers });
 
     const exportDir = path.join(__dirname, "../exports");
@@ -1290,6 +1290,20 @@ console.log("rows",rows);
 //   }
 // };
 
+const deduplicateEmails = (data) => {
+  const seenEmails = new Set();
+  return data.filter((row) => {
+    const email = row["email"]; // Accessing email using bracket notation
+    if (seenEmails.has(email)) {
+      return false; // Exclude if email is already in the set
+    }
+    seenEmails.add(email); // Add email to the set
+    return true; // Include if it's the first time
+  });
+};
+
+
+
 const insertSheet = async (req, res) => {
   try {
     // console.log("hhhhh");
@@ -1329,24 +1343,24 @@ const insertSheet = async (req, res) => {
       sourceFile: filePath,
       header: { rows: 1 }, // Skip the first row as headers
       columnToKey: {
-        A: "fullName",
-        B: "currentJobTitleEn",
-        C: "currentJobTitleAr",
-        D: "specialtyNameAr",
-        E: "phoneNumber",
-        F: "email",
-        I: "specialtyExperience",
-        J: "totalExperience",
-        G: "qualification",
-        K: "nationality",
+        H: "fullName",
+        A: "currentJobTitleEn",
+        B: "currentJobTitleAr",
+        C: "specialtyNameAr",
+        K: "phoneNumber",
+        J: "email",
+        F: "specialtyExperience",
+        G: "totalExperience",
+        D: "qualification",
+        I: "nationality",
         L: "gender",
         M: "currentlyEmployed",
         N: "skills",
-        H: "universityName",
+        E: "universityName",
         O: "resume",
       },
     });
-    console.log("Processed Data:", excelData.file.length);
+    console.log("Processed Data:", excelData.file?.length);
     console.log("Processed Data:", excelData);
 
     const sheetName = Object.keys(excelData);
@@ -1367,7 +1381,10 @@ const insertSheet = async (req, res) => {
       return res.status(400).json({ message: "No data found in the Excel file" });
     }
 
-    const bulkOps = sheetData.map(row => {
+    const deduplicatedData = deduplicateEmails(sheetData);
+    console.log("Deduplicated Data:", deduplicatedData);
+
+    const bulkOps = deduplicatedData.map(row => {
 
       const record = {
         fullName: row["fullName"],
@@ -1392,11 +1409,11 @@ const insertSheet = async (req, res) => {
       //   insertOne: {
       //     document: record,
       //   },
-      // }
+      // };
 
       return {
         updateOne: {
-          filter: { $or: [{ phoneNumber: record.phoneNumber }, { email: record.email }] },
+           filter: { $or: [{ phoneNumber: record.phoneNumber }, { email: record.email }] },
           update: { $set: record },
           upsert: true,
         }
@@ -1405,13 +1422,19 @@ const insertSheet = async (req, res) => {
     console.log("record", bulkOps.length)
 
     // Execute all operations in bulk
-    await joinFreelancer.bulkWrite(bulkOps);
+    try {
+      await joinFreelancer.bulkWrite(bulkOps, { ordered: false });
+
+    } catch (error) {
+      console.error('Bulk write error:', error.message, error.writeErrors);
+
+    }
 
     fs.unlink(filePath, (err) => {
       if (err) console.error("Error deleting file:", err);
     });
 
-    res.status(201).json({ message: "Data processed successfully" });
+    res.status(201).json({ message: "Data processed successfully", count: bulkOps.length });
 
   } catch (error) {
     console.error(error);

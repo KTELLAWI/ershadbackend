@@ -84,7 +84,8 @@ async function exportApplicationsToCSV(jobId) {
     }));
 
     // Step 3: Convert JSON data to CSV format
-    const json2csvParser = new Parser({ fields: ["fullName", "phoneNumber", "resume", "currentJobTitleEn", "currentJobTitleAr", "specialtyNameAr", "qualification", "universityName", "specialtyExperience", "totalExperience", "nationality", "email", "gender", "currentlyEmployed", "skills"] });
+    const json2csvParser = new Parser({ fields: ["currentJobTitleAr", "specialtyNameAr", "qualification", "universityName", "specialtyExperience", "totalExperience", "fullName", "nationality", "email", "phoneNumber", "gender", "currentlyEmployed", "skills", "dataConsent", "resume", "currentJobTitleAr", "specialtyNameAr", "qualification", "universityName", "specialtyExperience", "totalExperience", "fullName", "nationality", "email", "phoneNumber", "gender", "currentlyEmployed", "skills", "resume"
+] });
     const csvData = json2csvParser.parse(applicationsData);
 
     // Step 4: Write CSV data to a file in a temporary directory

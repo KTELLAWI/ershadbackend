@@ -63,21 +63,21 @@ const emailingjobform = async (options) => {
     // Email options
     const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: 'koutaiba4it@gmail.com,info@ershad-sa.com', // Replace with the actual recipient
-        subject: ' استلام سيرة ذاتية ',
+        to: 'koutaiba4it@gmail.com,info@ershad-sa.com,m.alsayyah14@gmail.com', // Replace with the actual recipient
+        subject: '  اضافة سيرة ذاتية جديدة',
         //   text:"",
         html: `<!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج تقديم سيرة ذاتية</title>
+    // <title>نموذج تقديم سيرة ذاتية</title>
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; direction: rtl; line-height: 1.6; padding: 20px;">
     <div style="background-color: white; max-width: 600px; margin: 0 auto; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px;">
         <h1 style="color: black; text-align: center; margin-bottom: 20px;"> سيرة ذاتية جديدة</h1>
         <p style="font-size: 16px; margin-bottom: 20px;">
-            لقد تم ارسال سيرة ذاتية جديدة لكم لضمها الى ملف المتاحين للعمل بالتفاصيل التالية
+            لقد تم ارسال سيرة ذاتية جديدة لكم وقد تم ضمها الى ملف المتاحين للعمل بالتفاصيل التالية
         </p>
         <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
             <tr>

@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
-const { auth, restrictTo,activated } = require("../middlewares/auth.js");
+const { auth, restrictTo, activated } = require("../middlewares/auth.js");
 const {
   applyToWork,
   deleteJoinFreelancerRequest,
@@ -43,7 +43,7 @@ router.post(
   upload.fields([
     { name: 'cv', maxCount: 1 },
     { name: 'profilePicture', maxCount: 1 }
-  ]), 
+  ]),
   // (req, res) => {
   //   // Debug logs to ensure files and body data are being received
   //   console.log('Files:', req.files); // Logs uploaded files
@@ -87,7 +87,7 @@ router.post(
 // });
 // const upload = multer({ storage: storage });
 
-router.get("/export-csv", auth, restrictTo("Admin"), exportTableToCsv);
+router.get("/export-csv", exportTableToCsv);
 // router.post(
 //   "/applyToWork",
 //  auth,
@@ -100,7 +100,7 @@ router.get("/export-csv", auth, restrictTo("Admin"), exportTableToCsv);
 router.get("/approved-freelancers", getApprovedFreelancers);
 router.get("/pending-freelancers", auth, getPendingFreelancers);
 router.delete("/delete-join/:id", auth, deleteJoinFreelancerRequest);
-router.post("/add/csv",upload.single("file"), insertSheet);
+router.post("/add/csv", upload.single("file"), insertSheet);
 router.get(
   "/singleJoinRequest/:id",
   auth,

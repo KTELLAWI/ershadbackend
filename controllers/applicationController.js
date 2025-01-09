@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const Job = require("../models/jobModel");
 const Application = require("../models/applicationModel");
 const emailingjobform = require("../utils/sendJobFormEmail");
-
+const JoinFreelaner = require('../models/joinFreelancerModel')
 
 // Function to export applications to CSV
 // async function exportApplicationsToCSV(jobId) {
@@ -48,9 +48,10 @@ const emailJobForm = async (req, res) => {
 
     const cvPath = req.file ? req.file.filename : null;
     const options = { ...data, resume: `https://backend.ershad-sa.com/userImages//${cvPath}` };
-    await emailingjobform(options)
-
-
+    
+    const joinFreelaner = JoinFreelaner(options);
+    await joinFreelaner.save();
+    await emailingjobform(options);
 
 
     res.status(201).json({
